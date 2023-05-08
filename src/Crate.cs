@@ -78,10 +78,10 @@ namespace TestMod
 
             // Square
             
-            origCorners[0] = new UnityEngine.Vector2(-width / 2f, -height / 2f); // Bottom Left
-            origCorners[1] = new UnityEngine.Vector2(-width / 2f, height / 2f); // Top Left
-            origCorners[2] = new UnityEngine.Vector2(width / 2f, height / 2f); // Top Right
-            origCorners[3] = new UnityEngine.Vector2(width / 2f, -height / 2f); // Bottom Right
+            origCorners[0] = new UnityEngine.Vector2(-1 / 2f, -1 / 2f); // Bottom Left
+            origCorners[1] = new UnityEngine.Vector2(-1 / 2f, 1 / 2f); // Top Left
+            origCorners[2] = new UnityEngine.Vector2(1 / 2f, 1 / 2f); // Top Right
+            origCorners[3] = new UnityEngine.Vector2(1 / 2f, -1 / 2f); // Bottom Right
 
             // Triangle needs some work with the allingement, but custom shapes work!
             // Triangle
@@ -92,7 +92,13 @@ namespace TestMod
             */
 
             Debug.Log("Loading Crate BodyChunk ctor!");
+<<<<<<< Updated upstream
             rect = new Polygon(this.bodyChunks[0].pos, rad * 2, rad * 2, origCorners);
+=======
+            //rect = new Polygon(this.bodyChunks[0].pos,Random.Range(3,12),10 );
+            rect = new Polygon(this.bodyChunks[0].pos,width,height,origCorners);
+            if (Plugin.DEBUGMODE) { DebugSpr = new PolygonDebugSprite(rect); }
+>>>>>>> Stashed changes
 
         }
 
@@ -105,7 +111,7 @@ namespace TestMod
         
         public override void Update(bool eu)
         {
-            base.Update(eu);
+           base.Update(eu);
 
 
             /*if (grabbedBy.Count == 0)
@@ -181,7 +187,12 @@ namespace TestMod
 
             Vector2 center = placeRoom.MiddleOfTile(abstractPhysicalObject.pos);
             bodyChunks[0].HardSetPosition(new Vector2(0, 0) * 20f + center);
+<<<<<<< Updated upstream
             rect.UpdateCornerPoints();
+=======
+          //  rect.UpdateCornerPoints();
+            placeRoom.AddObject(DebugSpr);
+>>>>>>> Stashed changes
         }
 
         public override void TerrainImpact(int chunk, IntVector2 direction, float speed, bool firstContact)

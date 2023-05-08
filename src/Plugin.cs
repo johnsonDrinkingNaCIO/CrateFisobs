@@ -57,10 +57,10 @@ namespace TestMod
 		{
 			orig(self, owner, index, pos, rad, mass);
 
-			if (self.owner is Crate)
-			{
-				rotationInDegrees = 45f;
-			}
+			//if (self.owner is Crate)
+			//{
+			//	rotationInDegrees = 45f;
+			//}
 
 		}
 
@@ -158,7 +158,7 @@ namespace TestMod
 
 		private void BodyChunk_Update(On.BodyChunk.orig_Update orig, BodyChunk self)
 		{
-			orig(self);
+			
 			if (self.owner is Crate)
             {
 				//Debug.Log("Starting tile initialization Loop");
@@ -271,9 +271,43 @@ namespace TestMod
                 {
 					Debug.Log("X: " + p.center.x + "   Y: " + p.center.y);
                 }
+<<<<<<< Updated upstream
 				*/
 			}
 		}
+=======
+                    //Debug.Log(crate.rect.collisionContainer.Count);
+                    //Debug.Log("Reached removal");
+                    //if (crate.rect.collisionContainer.Count > 0)
+                    //{
+                    //	for (int i = 0; i < crate.rect.collisionContainer.Count; i++)
+                    //	{
+                    //		TilePolygon temp = crate.rect.collisionContainer[i];
+                    //		Vector2 check = (temp.center / 20f)+new Vector2(10, 10);
+                    //		if (!collisionDetector.Contains(check))
+                    //		{
+                    //			//Debug.Log("removing");
+                    //			crate.rect.collisionContainer.RemoveAt(i);
+                    //			//Debug.Log("Finished removing");
+                    //		}
+
+                    //	}
+                    //}
+
+
+                    // Only use this log for debugging!!! This lags a LOT!!!!!
+                    /*
+                    Debug.Log(crate.rect.center / 20f);
+                    Debug.Log(crate.rect.collisionContainer.Count);
+                    foreach (TilePolygon p in crate.rect.collisionContainer)
+                    {
+                        Debug.Log("X: " + p.center.x + "   Y: " + p.center.y);
+                    }
+                    */
+                }
+            orig(self);
+        }
+>>>>>>> Stashed changes
 
 
 		private void BodyChunk_CheckHorizontalCollision(On.BodyChunk.orig_CheckHorizontalCollision orig, BodyChunk self)

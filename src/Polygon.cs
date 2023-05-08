@@ -12,6 +12,8 @@ namespace TestMod
     {
         public UnityEngine.Vector2 center;
         public UnityEngine.Vector2[] corners;
+        public UnityEngine.Vector2[] cornersLastPos;
+        public UnityEngine.Vector2[] cornersLastLastPos;
         private List<Vector2> edges = new List<Vector2>();
         public float width;
         public float height;
@@ -19,25 +21,66 @@ namespace TestMod
         public List<TilePolygon> collisionContainer; 
         private Vector2[] originalCorners;
 
-        public Polygon(UnityEngine.Vector2 center, float width, float height, Vector2[] origCorners)
+        public Polygon(Vector2 center, float width, float height, Vector2[] origCorners,float ang=0)
         {
             this.center = center;
             this.width = width;
             this.height = height;
+
+           // for(int i = 0; i < origCorners.Length; i++) { origCorners[i] *= new Vector2(width, height); }
             originalCorners = origCorners;
-            corners = new UnityEngine.Vector2[originalCorners.Length];
+            corners = origCorners;
+            cornersLastPos= origCorners;
+            cornersLastLastPos= origCorners;
+
             edges = new List<Vector2>();
-            UpdateCornerPointsWithAngle(0f);
-            angleDeg = 0f;
+            angleDeg = ang;
+            UpdateCornerPoints();
+           
             Debug.Log("Adding actual polygon list!");
             collisionContainer = new List<TilePolygon>();
             
+        }
+
+        public Polygon(Vector2 center, int NumPoint,float scale, float ang = 0)
+        {
+            if (NumPoint < 3) NumPoint = 3;
+            angleDeg = ang;
+            this.center=center;
+            this.width = scale;
+            this.height = scale;
+            this.originalCorners = new Vector2[NumPoint];
+            for(int i = 0; i < NumPoint; i++) { this.originalCorners[i]= RWCustom.Custom.RotateAroundOrigo(Vector2.up*scale,(((360/NumPoint)+angleDeg)*i)%360);}
+          //  for (int i = 0; i < NumPoint; i++) { originalCorners[i] *= new Vector2(scale,scale); }
+
+
+
+
+            this.corners = originalCorners;
+            this.cornersLastPos = this.originalCorners;
+            this.cornersLastLastPos = this.cornersLastPos;
+
+            
+            collisionContainer = new List<TilePolygon>();
+            UpdateCornerPoints();
         }
 
         public void Move(UnityEngine.Vector2 velocity)
         {
             center += velocity * Time.deltaTime;
         }
+        public void UpdateScale(float scale)
+        {
+            this.width = scale;
+            this.height = scale;
+        }
+
+        public void UpdateScale(float Width, float Height)
+        {
+            this.width = Width;
+            this.height= Height;
+        }
+
 
         public void UpdateCornerPoints()
         {
@@ -47,6 +90,7 @@ namespace TestMod
             for (int i = 0; i < corners.Length; i++)
             {
                 corners[i] = originalCorners[i];
+                corners[i]*=new Vector2(width, height);
             }
 
             // Define edges
@@ -67,6 +111,7 @@ namespace TestMod
             for (int i = 0; i < corners.Length; i++)
             {
                 corners[i] = originalCorners[i];
+                corners[i] *= new Vector2(width, height);
             }
 
             // Define Edges
