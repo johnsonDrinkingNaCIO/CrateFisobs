@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>9</LangVersion>
+    <BaseOutputPath>C:\Users\johns\OneDrive\Documents\GitHub\RW_Unity_cubed\CrateFisobs\mod\plugins</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,6 @@
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SolutionDir)mod/plugins/" />
-  </Target>
+  </Target> 
 
 </Project>

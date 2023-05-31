@@ -10,10 +10,13 @@ namespace TestMod
         public float rotation;
         public float lastRotation;
         public float darkness;
-        
+
+        public DebugSpr debugSpr;
+
         public CrateAbstract Abstr { get; }
         public Crate(CrateAbstract abstr) : base(abstr)
         {
+            debugSpr = new DebugSpr();
             Abstr = abstr;
 
             bodyChunks = new BodyChunk[]
@@ -47,7 +50,13 @@ namespace TestMod
             if (room == null || slatedForDeletetion)
                 return;
 
+            
+
+
             var phys = RoomPhysics.Get(room);
+
+            
+
             if (!phys.TryGetObject(this, out var obj))
             {
                 obj = phys.CreateObject(this);
@@ -57,20 +66,23 @@ namespace TestMod
                 rb2d.bodyType = RigidbodyType2D.Dynamic;
                 rb2d.drag = 0f;
                 rb2d.gravityScale = 0.5f;
-
+               // rb2d.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 var box = obj.AddComponent<BoxCollider2D>();
                 box.size = Vector2.one * 2f * firstChunk.rad / RoomPhysics.PIXELS_PER_UNIT;
+
+              
             }
             else
             {
                 var rb2d = obj.GetComponent<Rigidbody2D>();
+                
                 firstChunk.pos = rb2d.position * RoomPhysics.PIXELS_PER_UNIT;
                 firstChunk.vel = rb2d.velocity * 40f * RoomPhysics.PIXELS_PER_UNIT;
                 rotation = -rb2d.rotation;
 
                 if(Input.GetKey(KeyCode.B))
                 {
-                    rb2d.velocity += Custom.DirVec(rb2d.position * RoomPhysics.PIXELS_PER_UNIT, (Vector2)Futile.mousePosition + room.game.cameras[0].pos) * 3f * 40f / RoomPhysics.PIXELS_PER_UNIT;
+                    rb2d.velocity = Custom.DirVec(rb2d.position * RoomPhysics.PIXELS_PER_UNIT, (Vector2)Futile.mousePosition + room.game.cameras[0].pos) * 3f * 40f / RoomPhysics.PIXELS_PER_UNIT;
                 }
             }
         }
@@ -78,13 +90,14 @@ namespace TestMod
         // Deals damage to whatever it hits if it's a creature and it deals more than 1 damage.
         public override void Collide(PhysicalObject otherObject, int myChunk, int otherChunk)
         {
-            base.Collide(otherObject, myChunk, otherChunk);
+           // base.Collide(otherObject, myChunk, otherChunk);
             if (otherObject.bodyChunks[otherChunk].owner is Creature creature && !creature.dead)
             {
-                float damage = bodyChunks[myChunk].vel.magnitude / 2f;
+                float damage = bodyChunks[myChunk].vel.magnitude/30;
+                Debug.Log("SMASH! BOX CAUSE " + damage + " damage");
                 if (damage > 1f)
                 {
-                    creature.Violence(bodyChunks[myChunk], bodyChunks[myChunk].vel, otherObject.bodyChunks[otherChunk], null, Creature.DamageType.Blunt, damage, 5f);
+                    creature.Violence(bodyChunks[myChunk], bodyChunks[myChunk].vel, otherObject.bodyChunks[otherChunk], null, Creature.DamageType.Blunt, 3f, 5f);
                 }
             }
         }
@@ -93,6 +106,7 @@ namespace TestMod
         {
             base.PlaceInRoom(placeRoom);
 
+            placeRoom.AddObject(debugSpr);
             Vector2 center = placeRoom.MiddleOfTile(abstractPhysicalObject.pos);
             firstChunk.HardSetPosition(center);
         }
@@ -115,7 +129,9 @@ namespace TestMod
                 {
                     anchorX = 0.5f,
                     anchorY = 0.5f,
-                    scale = firstChunk.rad * 2f
+                    scale = firstChunk.rad * 2f,
+                   // scaleY = 550,
+                    color= Color.green
                 }
             };
 
@@ -126,6 +142,7 @@ namespace TestMod
         {
             sLeaser.sprites[0].SetPosition(Vector2.Lerp(firstChunk.lastPos, firstChunk.pos, timeStacker) - camPos);
             sLeaser.sprites[0].rotation = Mathf.LerpAngle(lastRotation, rotation, timeStacker);
+            sLeaser.sprites[0].color = Color.green;
         }
 
         public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)

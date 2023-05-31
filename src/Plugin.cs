@@ -27,7 +27,9 @@ namespace TestMod
         public void OnEnable()
         {
             Content.Register(new CrateFisobs());
+
             RoomPhysics.AddHooks();
+            BodyPartHook.AddHooks();
         }
     }
 }
