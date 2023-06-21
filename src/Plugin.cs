@@ -30,6 +30,7 @@ namespace TestMod
 
             RoomPhysics.AddHooks();
             BodyPartHook.AddHooks();
+            BodyChunkHook.AddHook();
         }
     }
 }

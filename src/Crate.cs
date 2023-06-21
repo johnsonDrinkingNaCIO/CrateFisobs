@@ -66,10 +66,11 @@ namespace TestMod
                 rb2d.bodyType = RigidbodyType2D.Dynamic;
                 rb2d.drag = 0f;
                 rb2d.gravityScale = 0.5f;
-               // rb2d.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+               
+                //rb2d.constraints =  RigidbodyConstraints2D.FreezeRotation;
                 var box = obj.AddComponent<BoxCollider2D>();
                 box.size = Vector2.one * 2f * firstChunk.rad / RoomPhysics.PIXELS_PER_UNIT;
-
+                //box.size = box.size+new Vector2(0,400 / RoomPhysics.PIXELS_PER_UNIT);
               
             }
             else
@@ -77,12 +78,12 @@ namespace TestMod
                 var rb2d = obj.GetComponent<Rigidbody2D>();
                 
                 firstChunk.pos = rb2d.position * RoomPhysics.PIXELS_PER_UNIT;
-                firstChunk.vel = rb2d.velocity * 40f * RoomPhysics.PIXELS_PER_UNIT;
+                firstChunk.vel *= 0; //rb2d.velocity * 40f * RoomPhysics.PIXELS_PER_UNIT;
                 rotation = -rb2d.rotation;
 
                 if(Input.GetKey(KeyCode.B))
                 {
-                    rb2d.velocity = Custom.DirVec(rb2d.position * RoomPhysics.PIXELS_PER_UNIT, (Vector2)Futile.mousePosition + room.game.cameras[0].pos) * 3f * 40f / RoomPhysics.PIXELS_PER_UNIT;
+                    rb2d.velocity += Custom.DirVec(rb2d.position * RoomPhysics.PIXELS_PER_UNIT, (Vector2)Futile.mousePosition + room.game.cameras[0].pos) * 3f * 40f / RoomPhysics.PIXELS_PER_UNIT;
                 }
             }
         }
@@ -130,8 +131,9 @@ namespace TestMod
                     anchorX = 0.5f,
                     anchorY = 0.5f,
                     scale = firstChunk.rad * 2f,
-                   // scaleY = 550,
-                    color= Color.green
+                   // scaleX = firstChunk.rad * 2f,
+                   // scaleY = 400,
+                    color= Color.gray
                 }
             };
 
@@ -142,7 +144,7 @@ namespace TestMod
         {
             sLeaser.sprites[0].SetPosition(Vector2.Lerp(firstChunk.lastPos, firstChunk.pos, timeStacker) - camPos);
             sLeaser.sprites[0].rotation = Mathf.LerpAngle(lastRotation, rotation, timeStacker);
-            sLeaser.sprites[0].color = Color.green;
+           
         }
 
         public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)

@@ -27,26 +27,27 @@ namespace TestMod
         {
             NumberOfPoint = new List<Vector2>
             {
-                new Vector2()
+                new Vector2(),
+                new Vector2(),
             };
         }
 
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
-            sLeaser.sprites = new FSprite[1];
+            sLeaser.sprites = new FSprite[2];
             
-            for(int i = 0; i < 1; i++) 
+            for(int i = 0; i < 2; i++) 
             {
                 sLeaser.sprites[i] = new FSprite("pixel", true);
-                sLeaser.sprites[i].scale = 12;
-                sLeaser.sprites[i].color = UnityEngine.Color.white;
+                sLeaser.sprites[i].scale = 4;
+                sLeaser.sprites[i].color = i==0? UnityEngine.Color.cyan:UnityEngine.Color.green;
             }
 
             AddToContainer(sLeaser, rCam, null);
         }
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, UnityEngine.Vector2 camPos)
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 2; i++)
             {
                 sLeaser.sprites[i].SetPosition ( NumberOfPoint[i]-camPos);
               
